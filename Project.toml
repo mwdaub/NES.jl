@@ -1,0 +1,7 @@
+name = "NES"
+uuid = "b703c7c5-a865-4334-a6f7-a26a21d51cb7"
+authors = ["Michael Daub <mwdaub@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"

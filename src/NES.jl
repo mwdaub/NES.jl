@@ -1,5 +1,7 @@
 module NES
 
-greet() = print("Hello World!")
+include("emulation.jl")
+
+export loadgame, frame, screen, setbuttons1!, setbuttons2!, setaudiosamplesperframe!
 
 end # module

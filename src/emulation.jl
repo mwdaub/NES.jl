@@ -1,6 +1,8 @@
 include("console.jl")
 include("apu.jl")
+include("cpu.jl")
 include("mapper.jl")
+include("ppu.jl")
 
 # Load a game into a new Console instance.
 function loadgame(path::String)::Console
@@ -15,8 +17,7 @@ end
 # seperately because fetching them from console on every call incurs a small
 # performance hit.
 function step!(console::Console, cpu::CPU, ppu::PPU, apu::APU)::Int32
-  cpuCycles = Int32(1)
-  #cpuCycles = cpustep!(console, cpu)
+  cpuCycles = cpustep!(console, cpu)
   #ppuCycles = cpuCycles * Int32(3)
   #for i = 1:ppuCycles
     #ppustep!(console, ppu)

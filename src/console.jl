@@ -160,6 +160,10 @@ end
 # Counters per CPU-second.
 const apuCounterFrequency = 240
 
+const defaultSampleRate = 44100
+
+const defaultSamplesPerFrame = defaultSampleRate ÷ 60
+
 mutable struct APU
   cycle::UInt64
   frameCounter::UInt32
@@ -176,8 +180,24 @@ mutable struct APU
   dmc::DMC
   filterChain::FilterChain
 
-  APU() = new(0, 0, 0, 0, false, AudioChannel(0), 0.0, Inf, Pulse(), Pulse(), Triangle(),
-              Noise(), DMC(), FilterChain())
+  function APU()
+    apu = new(0, 0, 0, 0, false, AudioChannel(0), 0.0, Inf, Pulse(), Pulse(), Triangle(),
+        Noise(), DMC(), FilterChain())
+    setsamplesperframe!(apu, defaultSamplesPerFrame)
+    apu
+  end
+end
+
+function setsamplesperframe!(apu::APU, samplesPerFrame::Integer)
+  apu.channel = AudioChannel(samplesPerFrame)
+  # Convert samples per frame to cpu steps per sample.
+  # This uses the minimum possible value of 29780 cpu
+  # cycles per frame to ensure enough samples are gathered
+  # between frames.
+  apu.sampleRate = 29780.0 / Float64(samplesPerFrame)
+  # Convert samples per frame to samples per second.
+  rate = 60.0f0 * Float32(samplesPerFrame)
+  setsamplerate!(apu.filterChain, rate)
 end
 
 # Mapper

@@ -231,7 +231,7 @@ function output!(triangle::Triangle)::UInt8
   if triangle.counterValue == 0
     return 0x00
   end
-  TriangleTable[dutyValue + 1]
+  TriangleTable[triangle.dutyValue + 1]
 end
 
 # Noise

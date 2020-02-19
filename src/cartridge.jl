@@ -8,7 +8,7 @@ import Base: read
   Four = 4
 end
 
-struct Cartridge
+mutable struct Cartridge
   # PRG-ROM banks
   PRG::Vector{UInt8}
   # CHR-ROM banks

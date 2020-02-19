@@ -4,11 +4,17 @@ include("cpu.jl")
 include("mapper.jl")
 include("ppu.jl")
 
+function reset!(console::Console)
+  cpureset!(console)
+  ppureset!(console.ppu)
+end
+
 # Load a game into a new Console instance.
 function loadgame(path::String)::Console
   cartridge = fromfile(path)
   mapper = createmapper(cartridge)
   c = createconsole(cartridge, mapper)
+  reset!(c)
   c
 end
 
@@ -18,11 +24,11 @@ end
 # performance hit.
 function step!(console::Console, cpu::CPU, ppu::PPU, apu::APU)::Int32
   cpuCycles = cpustep!(console, cpu)
-  #ppuCycles = cpuCycles * Int32(3)
-  #for i = 1:ppuCycles
-    #ppustep!(console, ppu)
-    #mapperstep!(console)
-  #end
+  ppuCycles = cpuCycles * Int32(3)
+  for i = 1:ppuCycles
+    ppustep!(console, ppu)
+    mapperstep!(console)
+  end
   for i = 1:cpuCycles
     apustep!(console, apu)
   end
@@ -30,6 +36,46 @@ function step!(console::Console, cpu::CPU, ppu::PPU, apu::APU)::Int32
 end
 
 step!(console::Console)::Int32 = step!(console, console.cpu, console.ppu, console.apu)
+
+# Execute emulation steps until the next frame.
+function stepframe!(console::Console)::Int32
+  reset!(console.apu.channel)
+  cpuCycles = Int32(0)
+  cpu = console.cpu
+  ppu = console.ppu
+  apu = console.apu
+  frame = ppu.frame
+  while ppu.frame == frame
+    cpuCycles += step!(console, cpu, ppu, apu)
+  end
+  cpuCycles
+end
+
+function stepframes!(console::Console, numFrames::Integer)::Int64
+  cpuCycles = Int64(0)
+  for i = 1:numFrames
+    cpuCycles += Int64(stepframe!(console))
+  end
+  cpuCycles
+end
+
+function stepframes!(console::Console, input::UInt8, numFrames::Integer)::Int64
+  setbuttons1!(console, input)
+  stepframes!(console, numFrames)
+end
+
+function stepframes!(console::Console, inputs::Vector{Tuple{UInt8, UInt8}})::Int64
+  cpuCycles = Int64(0)
+  for (input, numFrames) in inputs
+    cpuCycles += stepframes!(console, input, numFrames)
+  end
+  cpuCycles
+end
+
+# Frame number of the current state.
+function framenumber(console::Console)::UInt64
+  console.ppu.frame
+end
 
 # Current frame, where pixels are represented as palette indices.
 function frame(console::Console)::Frame
@@ -67,6 +113,12 @@ function steptimer!(console::Console, apu::APU)
     steptimer!(apu.dmc, console)
   end
   steptimer!(apu.triangle)
+end
+
+function fireirq!(console::Console)
+  if console.apu.frameIRQ
+    triggerirq!(console.cpu)
+  end
 end
 
 function steptimer!(dmc::DMC, console::Console)

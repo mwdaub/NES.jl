@@ -2,6 +2,6 @@ module NES
 
 include("emulation.jl")
 
-export loadgame, frame, screen, setbuttons1!, setbuttons2!, setaudiosamplesperframe!
+export reset!, loadgame, step!, stepframe!, stepframes!, frame, screen, setbuttons1!, setbuttons2!, setaudiosamplesperframe!
 
 end # module

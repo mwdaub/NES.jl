@@ -64,7 +64,7 @@ function printinstruction(console::Console)
   if bytes < 3
     w2 = "  "
   end
-  @printf("%4X  %s %s %s  %s %28s A:%02X X:%02X Y:%02X P:%02X SP:%02X CYC:%3d\n",
+  @sprintf("%4X  %s %s %s  %s %28s A:%02X X:%02X Y:%02X P:%02X SP:%02X CYC:%3d\n",
       cpu.PC, w0, w1, w2, name, "", cpu.A, cpu.X, cpu.Y, flags(cpu), cpu.SP,
       UInt32((cpu.cycles * 3) % 341))
 end
@@ -227,7 +227,7 @@ function cpustep!(console::Console, cpu::CPU)::Int32
   elseif modeInt == 0x06
     address = 0x0000
   elseif modeInt == 0x07
-    address = cpuread16bug(console, UInt16(cpuread(console, cpu.PC + 0x01)) + cpu.X)
+    address = cpuread16bug(console, UInt16(cpuread(console, cpu.PC + 0x01) + cpu.X))
   elseif modeInt == 0x08
     address = cpuread16bug(console, cpuread16(console, cpu.PC + 0x01))
   elseif modeInt == 0x09

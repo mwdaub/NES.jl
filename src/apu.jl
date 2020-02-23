@@ -115,9 +115,9 @@ function steplength!(apu::APU)
   steplength!(apu.noise)
 end
 
-function readregister!(apu::APU, address::UInt16)::UInt8
+function readregister(apu::APU, address::UInt16)::UInt8
   @match address begin
-    0x4015 => readStatus()
+    0x4015 => readstatus(apu)
     _ => begin
       # default:
       # TODO: add logging.
@@ -222,25 +222,30 @@ function readstatus(apu::APU)::UInt8
 end
 
 function writecontrol!(apu::APU, val::UInt8)
-  apu.pulse1.enabled = (val & 1) == 1
-  apu.pulse2.enabled = (val & 2) == 2
-  apu.triangle.enabled = (val & 4) == 4
-  apu.noise.enabled = (val & 8) == 8
-  apu.dmc.enabled = (val & 16) == 16
-  if !apu.pulse1.enabled
-    apu.pulse1.lengthValue = 0
+  pulse1 = apu.pulse1
+  pulse1.enabled = (val & 1) == 1
+  if !pulse1.enabled
+    pulse1.lengthValue = 0
   end
-  if !apu.pulse2.enabled
-    apu.pulse2.lengthValue = 0
+  pulse2 = apu.pulse2
+  pulse2.enabled = (val & 2) == 2
+  if !pulse2.enabled
+    pulse2.lengthValue = 0
   end
-  if !apu.triangle.enabled
-    apu.triangle.lengthValue = 0
+  triangle = apu.triangle
+  triangle.enabled = (val & 4) == 4
+  if !triangle.enabled
+    triangle.lengthValue = 0
   end
-  if !apu.noise.enabled
-    apu.noise.lengthValue = 0
+  noise = apu.noise
+  noise.enabled = (val & 8) == 8
+  if !noise.enabled
+    noise.lengthValue = 0
   end
-  if !apu.dmc.enabled
-    apu.dmc.currentLength = 0
+  dmc = apu.dmc
+  dmc.enabled = (val & 16) == 16
+  if !dmc.enabled
+    dmc.currentLength = 0
   else
     if dmc.currentLength == 0
       restart!(dmc)

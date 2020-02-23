@@ -23,8 +23,8 @@ mutable struct Pulse
   envelopeVolume::UInt8
   constantVolume::UInt8
 
-  Pulse() = new(false, 0, false, 0, 0, 0, 0, 0, false, false, false, 0, 0, 0,
-                false, false, false, 0, 0, 0, 0)
+  Pulse(channel) = new(false, channel, false, 0, 0, 0, 0, 0, false, false,
+                       false, 0, 0, 0, false, false, false, 0, 0, 0, 0)
 end
 
 const LengthTable = [
@@ -42,7 +42,7 @@ const DutyTable = [
 ]
 
 function writecontrol!(pulse::Pulse, val::UInt8)
-  pulse.dutyMode = (val >> 6) & 0x03
+  pulse.dutyMode = val >> 6
   pulse.lengthEnabled = ((val >> 5) & 0x01) == 0x00
   pulse.envelopeLoop = ((val >> 5) & 0x01) == 0x01
   pulse.envelopeEnabled = ((val >> 4) & 0x01) == 0x00
@@ -52,7 +52,7 @@ function writecontrol!(pulse::Pulse, val::UInt8)
 end
 
 function writesweep!(pulse::Pulse, val::UInt8)
-  pulse.sweepEnabled = ((val >> 7) & 0x01) == 0x01
+  pulse.sweepEnabled = (val >> 7) == 0x01
   pulse.sweepPeriod = ((val >> 4) & 0x07) + 0x01
   pulse.sweepNegate = ((val >> 3) & 0x01) == 0x01
   pulse.sweepShift = val & 0x07
@@ -252,7 +252,7 @@ mutable struct Noise
   envelopeVolume::UInt8
   constantVolume::UInt8
 
-  Noise() = new(false, false, 0, false, 0, 0, 0, false, false, false, 0, 0,
+  Noise() = new(false, false, 1, false, 0, 0, 0, false, false, false, 0, 0,
                   0, 0)
 end
 

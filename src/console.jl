@@ -181,7 +181,7 @@ mutable struct APU
   filterChain::FilterChain
 
   function APU()
-    apu = new(0, 0, 0, 0, false, AudioChannel(0), 0.0, Inf, Pulse(), Pulse(), Triangle(),
+    apu = new(0, 0, 0, 0, false, AudioChannel(0), 0.0, Inf, Pulse(1), Pulse(2), Triangle(),
         Noise(), DMC(), FilterChain())
     setsamplesperframe!(apu, defaultSamplesPerFrame)
     apu

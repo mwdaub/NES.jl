@@ -4,7 +4,6 @@ authors = ["Michael Daub <mwdaub@gmail.com>"]
 version = "0.1.0"
 
 [deps]
-ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
-Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+ColorTypes = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
 Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"

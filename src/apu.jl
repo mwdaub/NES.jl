@@ -70,7 +70,7 @@ function stepframecounter!(console::Console)
         0x02 => begin
           stepenvelope!(apu)
         end
-        0x03 => begin
+        0x04 => begin
           stepenvelope!(apu)
           stepsweep!(apu)
           steplength!(apu)

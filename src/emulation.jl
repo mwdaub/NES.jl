@@ -92,16 +92,16 @@ function setbuttons1!(console::Console, buttons::UInt8)
   console.controller1.buttons = buttons
 end
 
-# Update the input for controller 1 by adding the indicated buttons, leaving
+# Update the input for controller 1 by adding the indicated button, leaving
 # previous inputs set.
-function addbuttons1!(console::Console, buttons::UInt8)
-  console.controller1.buttons |= buttons
+function setbutton1!(console::Console, index::UInt8)
+  console.controller1.buttons |= (0x01 << index)
 end
 
-# Update the input for controller 1 by removing the indicated buttons, leaving
+# Update the input for controller 1 by removing the indicated button, leaving
 # previous inputs set.
-function removebuttons1!(console::Console, buttons::UInt8)
-  console.controller1.buttons -= (console.controller1.buttons & buttons)
+function removebutton1!(console::Console, index::UInt8)
+  console.controller1.buttons -= (console.controller1.buttons & (0x01 << index))
 end
 
 # Set the input for controller 2.
@@ -109,16 +109,16 @@ function setbuttons2!(console::Console, buttons::UInt8)
   console.controller2.buttons = buttons
 end
 
-# Update the input for controller 2 by adding the indicated buttons, leaving
+# Update the input for controller 2 by adding the indicated button, leaving
 # previous inputs set.
-function addbuttons2!(console::Console, buttons::UInt8)
-  console.controller2.buttons |= buttons
+function setbutton2!(console::Console, index::UInt8)
+  console.controller1.buttons |= (0x01 << index)
 end
 
-# Update the input for controller 2 by removing the indicated buttons, leaving
+# Update the input for controller 2 by removing the indicated button, leaving
 # previous inputs set.
-function removebuttons2!(console::Console, buttons::UInt8)
-  console.controller2.buttons -= (console.controller2.buttons & buttons)
+function removebutton2!(console::Console, index::UInt8)
+  console.controller2.buttons -= (console.controller2.buttons & (0x01 << index))
 end
 
 # Update the sample rate for the audio component.

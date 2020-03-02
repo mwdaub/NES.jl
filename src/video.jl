@@ -32,15 +32,15 @@ const Frame = Matrix{UInt8}
 # Rendered frame containing pixel RGB values.
 const Screen = Matrix{RGB24}
 
-Frame() = zeros(UInt8, width, height)
-Screen() = fill(RGB24(0x00), (width, height))
+Frame() = zeros(UInt8, height, width)
+Screen() = fill(RGB24(0x00), (height, width))
 
 # Render the frame as a screen with RGB pixel values using the given palette.
 function render!(f::Frame, s::Screen, p::Palette)
-  @assert size(f) == (width, height)
-  @assert size(s) == (width, height)
+  @assert size(f) == (height, width)
+  @assert size(s) == (height, width)
   @assert size(p) == (numcolors,)
-  for i = 1:height, j = 1:width
+  for i = 1:width, j = 1:height
     index = f[j, i] + 1
     s[j, i] = p[index]
   end

@@ -414,7 +414,7 @@ function renderpixel!(ppu::PPU, x::Int32, y::Int32)
     end
   end
   pixel = readpalette(ppu, UInt16(color)) & 0x3F
-  @inbounds ppu.back[x, y + 1] = pixel
+  @inbounds ppu.back[y + 1, x] = pixel
 end
 
 function fetchspritepattern(console::Console, i::Int32, row::Int32)::UInt32

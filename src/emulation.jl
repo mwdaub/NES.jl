@@ -1,3 +1,6 @@
+import Base.Threads.atomic_and!
+import Base.Threads.atomic_or!
+
 include("console.jl")
 include("apu.jl")
 include("cpu.jl")
@@ -89,36 +92,36 @@ end
 
 # Set the input for controller 1.
 function setbuttons1!(console::Console, buttons::UInt8)
-  console.controller1.buttons = buttons
+  console.controller1.buttons[] = buttons
 end
 
 # Update the input for controller 1 by adding the indicated button, leaving
 # previous inputs set.
 function setbutton1!(console::Console, index::UInt8)
-  console.controller1.buttons |= (0x01 << index)
+  atomic_or!(console.controller1.buttons, 0x01 << index)
 end
 
 # Update the input for controller 1 by removing the indicated button, leaving
 # previous inputs set.
 function removebutton1!(console::Console, index::UInt8)
-  console.controller1.buttons -= (console.controller1.buttons & (0x01 << index))
+  atomic_and!(console.controller1.buttons, ~(0x01 << index))
 end
 
 # Set the input for controller 2.
 function setbuttons2!(console::Console, buttons::UInt8)
-  console.controller2.buttons = buttons
+  console.controller2.buttons[] = buttons
 end
 
 # Update the input for controller 2 by adding the indicated button, leaving
 # previous inputs set.
 function setbutton2!(console::Console, index::UInt8)
-  console.controller1.buttons |= (0x01 << index)
+  atomic_or!(console.controller2.buttons, 0x01 << index)
 end
 
 # Update the input for controller 2 by removing the indicated button, leaving
 # previous inputs set.
 function removebutton2!(console::Console, index::UInt8)
-  console.controller2.buttons -= (console.controller2.buttons & (0x01 << index))
+  atomic_and!(console.controller1.buttons, ~(0x01 << index))
 end
 
 # Update the sample rate for the audio component.

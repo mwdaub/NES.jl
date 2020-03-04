@@ -4,7 +4,7 @@ using Test, ColorTypes, NES
   c = loadgame("test/Super_Tilt_Bro.nes")
   actual = screen(c)
   expected = open("test/blank_screen.bin") do f
-    reinterpret(RGB24, reinterpret(UInt32, reshape(read(f), 4 * 256, 240)))
+    reinterpret(RGB24, reinterpret(UInt32, reshape(read(f), 4 * 240, 256)))
   end
   @test actual == expected
 end
@@ -56,7 +56,7 @@ end
   stepframes!(c, 120)
   actual = screen(c)
   expected = open("test/screen.bin") do f
-    reinterpret(RGB24, reinterpret(UInt32, reshape(read(f), 4 * 256, 240)))
+    reinterpret(RGB24, reinterpret(UInt32, reshape(read(f), 4 * 240, 256)))
   end
   @test actual == expected
 end
@@ -69,7 +69,7 @@ end
   stepframes!(c, inputs)
   actual = screen(c)
   expected = open("test/inputs.bin") do f
-    reinterpret(RGB24, reinterpret(UInt32, reshape(read(f), 4 * 256, 240)))
+    reinterpret(RGB24, reinterpret(UInt32, reshape(read(f), 4 * 240, 256)))
   end
   @test actual == expected
 end
